@@ -1,6 +1,6 @@
 import pystray
 from PIL import Image
-import subprocess
+import os
 from frameworks.telegram import sendcommand as send
 from frameworks.ConfigReaderFile import readconfig as rc
 from frameworks.loading import resource_path as path
@@ -10,7 +10,7 @@ def exitm(icon):
 	icon.stop()
 
 def OCF(icon):
-	subprocess.run(['open', 'config.PTSC'], check=True)
+	os.system('config.PTSC')
 
 
 commands = rc().get('COMMANDS')
