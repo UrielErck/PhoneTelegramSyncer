@@ -1,3 +1,12 @@
+def bintobool(num: int) -> bool:
+    if not type(num) == int:
+        num = int(num)
+    if num == 1:
+        return True
+    elif num == 0:
+        return False
+    else:
+        raise ValueError
 def gettext(paramname: str, text: str) -> str:
     lenght = len(paramname)
     fintext = text[text.find(f'### {paramname} ###')+lenght+8:text.find(f'&& {paramname} &&')]
@@ -20,10 +29,14 @@ def readconfig() -> dict:
             value = i[i.find('=')+2:]
             temp.update({name: value})
     findata.update({'MVARIABLE': temp})
-    temp = []
+    temp = {}
     for i in commandstext.split('\n'):
-        if i:
-            temp.append(i)
+        if not i and not '=' in i:
+            pass
+        else:
+            name = i[0:i.find('=') - 1]
+            isvisible = bintobool(i[i.find('=') + 2:])
+            temp.update({name: isvisible})
     findata.update({'COMMANDS': temp})
     temp = {}
     for i in variablestext.split('\n'):
@@ -31,8 +44,27 @@ def readconfig() -> dict:
             name = i[0:i.find('=') - 1]
             value = i[i.find('=') + 2:]
             if value.isdigit():
-                value = int(value)
+                value = bintobool(value)
             temp.update({name: value})
     findata.update({'VARIABLE': temp})
     temp = 0
     return findata
+
+def editconfig(configname, data):
+    if configname == 'MAIN VARIABLE':
+        pass
+    elif configname == 'COMMANDS':
+        conftext = ''
+        for i in data.keys():
+            if conftext != None:
+                conftext += '\n'
+            conftext += f'{i} = {data.get(i)}'
+        file = open(f'config.PTSC', 'r')
+        filetext = file.read()
+        file.close()
+        file = open(f'config.PTSC', 'w')
+        conftext = f"{filetext[0:filetext.find(f'### {configname} ###') + len(configname)+8]}{conftext}\n{filetext[filetext.find(f'&& {configname} &&'):]}"
+        file.write(conftext)
+        file.close()
+    elif configname == 'VARIABLES':
+        pass

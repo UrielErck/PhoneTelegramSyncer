@@ -1,5 +1,5 @@
 def launch():
-    import frameworks.trayico
+    import frameworks.trayico as ico
 def resource_path(relative_path):
     import os
     import sys
