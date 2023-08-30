@@ -1,12 +1,23 @@
+def resource_path(relative_path):
+    import os
+    import sys
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath("")
+
+    return os.path.join(base_path, relative_path)
+
 def main():
     import customtkinter as ctk
     import frameworks.ConfigReaderFile as CRF
-    import os
-    import sys
     standartcolor = ('#FFFFFF', '#333333')
     app = ctk.CTk(fg_color=standartcolor, )
     app.resizable(width=False, height=False)
     app.title('Phone Telegram Syncer Configuration')
+    app.iconbitmap(resource_path("frameworks\ico.ico"))
 
     class Variables:
         visible = False
@@ -195,7 +206,7 @@ def main():
             self.title.grid(row=0, columnspan=2, sticky='WE')
             class text:
                 frame = ctk.CTkScrollableFrame(master=self.root, fg_color=standartcolor, width=400)
-                text = ctk.CTkLabel(master=frame, text=open('frameworks/HelloPageText.text').read(), justify='left',
+                text = ctk.CTkLabel(master=frame, text=open(resource_path('frameworks/HelloPageText.text')).read(), justify='left',
                                     font=('Arial', 17))
                 text.grid(column=0, row=0, ipadx=5, ipady=5)
             self.text = text

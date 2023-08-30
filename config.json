@@ -19,7 +19,7 @@
   },
   {
    "optionDest": "icon_file",
-   "value": "D:/Files/TelegramBot/frameworks/ico.ico"
+   "value": "D:/Files/PhoneTelegramSyncer/frameworks/ico.ico"
   },
   {
    "optionDest": "name",
@@ -47,7 +47,7 @@
   },
   {
    "optionDest": "version_file",
-   "value": "D:/Files/TelegramBot/versionfile"
+   "value": "D:/Files/PhoneTelegramSyncer/versionfile"
   },
   {
    "optionDest": "embed_manifest",

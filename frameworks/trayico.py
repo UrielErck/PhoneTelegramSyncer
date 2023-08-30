@@ -4,7 +4,7 @@ import os
 from frameworks.telegram import sendcommand as send
 from frameworks.ConfigReaderFile import readconfig as rc
 from frameworks.loading import resource_path as path
-import frameworks.SettingsUI as ui
+import frameworks.SettingsUI
 import importlib
 import sys
 
@@ -18,8 +18,8 @@ class func:
 		os.system('config.PTSC')
 
 	def UI(self):
-		importlib.reload(ui)
-		ui.main()
+		importlib.reload(frameworks.SettingsUI)
+		frameworks.SettingsUI.main()
 
 	def reload(self):
 		icon.stop()
