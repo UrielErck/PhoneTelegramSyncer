@@ -7,7 +7,7 @@
   },
   {
    "optionDest": "filenames",
-   "value": "D:/Files/TelegramBot/main.py"
+   "value": "D:/Files/PhoneTelegramSyncer/main.py"
   },
   {
    "optionDest": "onefile",
@@ -79,7 +79,11 @@
   },
   {
    "optionDest": "datas",
-   "value": "D:/Files/TelegramBot/frameworks;frameworks/"
+   "value": "D:/Files/PhoneTelegramSyncer/frameworks;frameworks/"
+  },
+  {
+   "optionDest": "datas",
+   "value": "D:/Files/PhoneTelegramSyncer/venv/Lib/site-packages/customtkinter;customtkinter/"
   }
  ],
  "nonPyinstallerOptions": {
