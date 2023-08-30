@@ -10,6 +10,6 @@ def sendcommand(icon, text) -> bool:
     botname = bot.get_me()
     # sending messages:
     bot.send_message(CHAT, f'[(name:{botname.first_name}):(do:{text})]:(id:{botname.id})')
-    if rc().get('VARIABLE').get('NOTIF') == 1:
+    if rc().get('VARIABLE').get('NOTIF') in [True, 'True']:
         icon.notify(str(text))
     return True

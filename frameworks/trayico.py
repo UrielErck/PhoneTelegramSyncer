@@ -6,6 +6,7 @@ from frameworks.ConfigReaderFile import readconfig as rc
 from frameworks.loading import resource_path as path
 import frameworks.SettingsUI as ui
 import importlib
+import sys
 
 class func:
 	def __init__(self):
@@ -14,11 +15,15 @@ class func:
 		icon.stop()
 
 	def OCF(self):
-		os.system('../config.PTSC')
+		os.system('config.PTSC')
 
 	def UI(self):
 		importlib.reload(ui)
 		ui.main()
+
+	def reload(self):
+		icon.stop()
+		os.execv(sys.executable, ['python'] + sys.argv)
 
 
 commands = rc().get('COMMANDS')
@@ -27,7 +32,7 @@ menu = [pystray.MenuItem("Settings",
 							 pystray.MenuItem('Exit', func.exitm),
 							 pystray.MenuItem('Open Config File', func.OCF),
 							 pystray.MenuItem('Settings', func.UI),
-							 # pystray.MenuItem('Reload', func.reload),
+							 pystray.MenuItem('Reload', func.reload),
 						 ))]
 for i in commands:
 	if i == rc().get('VARIABLE').get('LCA'):

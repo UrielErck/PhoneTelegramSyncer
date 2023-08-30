@@ -51,20 +51,21 @@ def readconfig() -> dict:
     return findata
 
 def editconfig(configname, data):
-    if configname == 'MAIN VARIABLE':
-        pass
-    elif configname == 'COMMANDS':
-        conftext = ''
-        for i in data.keys():
-            if conftext != None:
-                conftext += '\n'
-            conftext += f'{i} = {data.get(i)}'
-        file = open(f'config.PTSC', 'r')
-        filetext = file.read()
-        file.close()
-        file = open(f'config.PTSC', 'w')
-        conftext = f"{filetext[0:filetext.find(f'### {configname} ###') + len(configname)+8]}{conftext}\n{filetext[filetext.find(f'&& {configname} &&'):]}"
-        file.write(conftext)
-        file.close()
-    elif configname == 'VARIABLES':
-        pass
+    # if configname == 'MAIN VARIABLE':
+    #     pass
+    # elif configname == 'COMMANDS':
+    conftext = ''
+    for i in data.keys():
+        if conftext != None:
+            conftext += '\n'
+        conftext += f'{i} = {data.get(i)}'
+    file = open(f'config.PTSC', 'r')
+    filetext = file.read()
+    file.close()
+    file = open(f'config.PTSC', 'w')
+    conftext = f"{filetext[0:filetext.find(f'### {configname} ###') + len(configname)+8]}{conftext}\n{filetext[filetext.find(f'&& {configname} &&'):]}"
+    file.write(conftext)
+    file.close()
+    return conftext
+    # elif configname == 'VARIABLES':
+    #     pass

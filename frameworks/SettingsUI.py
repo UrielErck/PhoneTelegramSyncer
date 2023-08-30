@@ -1,50 +1,125 @@
 def main():
     import customtkinter as ctk
     import frameworks.ConfigReaderFile as CRF
+    import os
+    import sys
     standartcolor = ('#FFFFFF', '#333333')
     app = ctk.CTk(fg_color=standartcolor)
+
+    class Variables:
+        visible = False
+        root = ctk.CTkFrame(master=app, fg_color=standartcolor)
+        items = CRF.readconfig().get('VARIABLE')
+        dataEnt = []
+        Entframe = 0
+
+        def save(self, data):
+            self.ischanged = 1
+            if not self.visible:
+                return 1
+            print(f'Old data: {self.items}')
+            self.items.clear()
+            for i in data:
+                value = i.get('Value').get()
+                name = str(i.get('Label').cget('text'))[:-2]
+                self.items.update({name: value})
+            self.Entframe.destroy()
+            self.__init__()
+            print(f'New data: {self.items}')
+            print(CRF.editconfig('VARIABLES', self.items))
+
+        def __init__(self):
+            super().__init__()
+            self.dataEnt = []
+            self.root.grid(row=0, column=1)
+            self.Entframe = ctk.CTkFrame(master=self.root, fg_color='transparent')
+            self.Entframe.grid(row=0, column=0)
+            row = 0
+            savebtn = 0
+            app.bind('<Return>', lambda event: self.save(self.dataEnt))
+            for i in self.items.keys():
+                row += 1
+                tmpFrame = ctk.CTkFrame(master=self.Entframe, fg_color='transparent')
+                print(str(self.items.get(i)))
+                if type(self.items.get(i)) == bool or self.items.get(i) in ['True', 'False']:
+                    Value = ctk.CTkSwitch(master=tmpFrame, onvalue=True, offvalue=False, text='')
+                    if str(self.items.get(i)) == 'True':
+                         Value.select()
+                    else:
+                        Value.deselect()
+                else:
+                     Value = ctk.CTkEntry(master=tmpFrame, placeholder_text='Put value here...', width=350)
+                self.dataEnt.append({"id": i,
+                                     'Label': ctk.CTkLabel(master=tmpFrame, text=f"{i}: ", width=50),
+                                     'Value': Value,
+                                     'Frame': tmpFrame,
+                                     })
+                tmpFrame.grid(row=row - 1, column=0, sticky='WN', ipadx=3, ipady=3, padx=5, pady=5)
+                self.dataEnt[row - 1].get('Label').grid(row=0, column=0, ipadx=5)
+                try:
+                    self.dataEnt[row - 1].get('Value').insert(0, self.items.get(i))
+                except AttributeError:
+                    pass
+                self.dataEnt[row - 1].get('Value').grid(row=0, column=1)
+            savebtn = ctk.CTkButton(master=self.root, text='Save', fg_color='green', hover_color='dark green',
+                                    command=lambda: self.save(self.dataEnt))
+            savebtn.grid(column=0, sticky='S', row=3)
 
     class MVariables:
         visible = False
         root = ctk.CTkFrame(master=app, fg_color=standartcolor)
         items = CRF.readconfig().get('MVARIABLE')
         dataEnt = []
+        Entframe = 0
+
         def save(self, data):
+            self.ischanged = 1
             if not self.visible:
                 return 1
-            pass
+            print(f'Old data: {self.items}')
+            self.items.clear()
+            for i in data:
+                value = i.get('Entry').get()
+                name = str(i.get('Label').cget('text'))[:-2]
+                self.items.update({name: value})
+            self.Entframe.destroy()
+            self.__init__()
+            print(f'New data: {self.items}')
+            print(CRF.editconfig('MAIN VARIABLE', self.items))
+
         def __init__(self):
             super().__init__()
             self.dataEnt = []
-            self.root.grid(row=0, column=1, sticky='WN')
-            Entframe = ctk.CTkFrame(master=self.root, fg_color='transparent')
-            Entframe.grid(row=0, column=0)
+            self.root.grid(row=0, column=1)
+            self.Entframe = ctk.CTkFrame(master=self.root, fg_color='transparent')
+            self.Entframe.grid(row=0, column=0)
             row = 0
             savebtn = 0
-            app.bind('<Return>', lambda event: savebtn.cget('command'))
+            app.bind('<Return>', lambda event: self.save(self.dataEnt))
             for i in self.items.keys():
                 row += 1
-                tmpFrame = ctk.CTkFrame(master=Entframe, fg_color='transparent')
+                tmpFrame = ctk.CTkFrame(master=self.Entframe, fg_color='transparent')
                 self.dataEnt.append({"id": i,
-                                     'Lable': ctk.CTkLabel(master=tmpFrame, text=f"{i}: ", width=50),
+                                     'Label': ctk.CTkLabel(master=tmpFrame, text=f"{i}: ", width=50),
                                      'Entry': ctk.CTkEntry(master=tmpFrame, placeholder_text='Put value here...', width=350),
                                      'Frame': tmpFrame,
                                      })
                 tmpFrame.grid(row=row-1, column=0, sticky='WN', ipadx=3, ipady=3, padx=5, pady=5)
-                self.dataEnt[row-1].get('Lable').grid(row=0, column=0, ipadx=5)
+                self.dataEnt[row-1].get('Label').grid(row=0, column=0, ipadx=5)
                 self.dataEnt[row-1].get('Entry').insert(0, self.items.get(i))
                 self.dataEnt[row-1].get('Entry').grid(row=0, column=1)
             savebtn = ctk.CTkButton(master=self.root, text='Save', fg_color='green', hover_color='dark green',
-                                    command=lambda data=self.dataEnt: self.save(data))
+                                    command=lambda: self.save(self.dataEnt))
             savebtn.grid(column=0, sticky='S', row=3)
 
-
     class Command:
+
         def delete(self, index, datalist):
             datalist[index].get('Frame').destroy()
             datalist.pop(index)
 
         def save(self, datalist):
+            self.ischanged = 1
             if not self.visible:
                 return 0
             print(f'Old data: {self.items}')
@@ -58,16 +133,21 @@ def main():
             self.__init__()
             print(f'New data: {self.items}')
             CRF.editconfig('COMMANDS', self.items)
+
         def add(self):
             self.items.update({'NEW': True})
             self.commandsframe.destroy()
             self.__init__()
+
+        ischanged = 1
         visible = False
         root = ctk.CTkFrame(master=app, fg_color=standartcolor)
         items = CRF.readconfig().get('COMMANDS')
         UICommands = []
         print(items)
+
         def __init__(self):
+            self.ischanged = 1
             app.bind('<Return>', lambda event: Command.save(self=self, datalist=self.UICommands))
             super().__init__()
             self.UICommands = []
@@ -123,7 +203,7 @@ def main():
         frame = None
         buttonslist = []
         mainframe = None
-        items = {'Hello page': HelloPage, 'Commands': Command, 'Main variable': MVariables, 'Variables': None}
+        items = {'Hello page': HelloPage, 'Commands': Command, 'Main variable': MVariables, 'Variables': Variables}
         ismenuvisible = False
         btnitemsframe = None
 
@@ -164,6 +244,26 @@ def main():
                 self.ismenuvisible = True
                 self.btnitemsframe.grid(row=1, column=0)
 
+    class ExitMenu:
+        root = None
+        exitcode = False
+        def end(self, code):
+            self.root.destroy()
+            if not type(code) == bool:
+                return code
+            self.exitcode = code
+        def __init__(self):
+            super().__init__()
+            self.root.grid()
+            Inotext = ctk.CTkLabel(master=self.root, text='Some settings was changed.\n do you wish restart program to apply changes?')
+            Inotext.grid(row=0, sticky='NSWE', columnspan=2, padx=10, pady=10, ipadx=5, ipady=5)
+            yesbtn = ctk.CTkButton(master=self.root, text='Yes', command=lambda : self.end(True), fg_color='green', hover_color='dark green')
+            yesbtn.grid(row=1, column=0, padx=10, pady=10, ipadx=5, ipady=5)
+            nobtn = ctk.CTkButton(master=self.root, text='No', fg_color='green', hover_color='dark green',
+                                    command=lambda : self.end(False))
+            nobtn.grid(row=1, column=1, padx=10, pady=10, ipadx=5, ipady=5)
+
+
     def setvisible(frame):
         for i in Menu.items.values():
             print(i)
@@ -182,6 +282,26 @@ def main():
             frame.visible = False
             frame.root.grid_forget()
 
+    # def callback(frame):
+    #     temp = 0
+    #     for i in [Command, MVariables, Variables]:
+    #         try:
+    #             if i.ischanged == 1:
+    #                 temp = 1
+    #         except AttributeError:
+    #             pass
+    #     print(temp)
+    #     if temp == 1:
+    #         ExitMenu.root = ctk.CTkToplevel(master=app, fg_color=standartcolor)
+    #         with ExitMenu() as temp:
+    #             if temp:
+    #                 os.execv(sys.argv[0], sys.argv)
+    #             else:
+    #                 frame.destroy()
+    #     else:
+    #         frame.destroy()
+
+    # app.protocol("WM_DELETE_WINDOW", lambda frame=app: callback(frame))
     Menu.mainframe = app
     Menu()
     setvisible(HelloPage)
