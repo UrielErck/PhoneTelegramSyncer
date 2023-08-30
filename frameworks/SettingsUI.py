@@ -4,7 +4,9 @@ def main():
     import os
     import sys
     standartcolor = ('#FFFFFF', '#333333')
-    app = ctk.CTk(fg_color=standartcolor)
+    app = ctk.CTk(fg_color=standartcolor, )
+    app.resizable(width=False, height=False)
+    app.title('Phone Telegram Syncer Configuration')
 
     class Variables:
         visible = False
