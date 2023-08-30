@@ -192,8 +192,9 @@ def main():
             self.title = ctk.CTkLabel(master=self.root, text='Hello Page')
             self.title.grid(row=0, columnspan=2, sticky='WE')
             class text:
-                frame = ctk.CTkScrollableFrame(master=self.root, fg_color=standartcolor, width=300)
-                text = ctk.CTkLabel(master=frame, text=open('frameworks/HelloPageText.text').read())
+                frame = ctk.CTkScrollableFrame(master=self.root, fg_color=standartcolor, width=400)
+                text = ctk.CTkLabel(master=frame, text=open('frameworks/HelloPageText.text').read(), justify='left',
+                                    font=('Arial', 17))
                 text.grid(column=0, row=0, ipadx=5, ipady=5)
             self.text = text
             self.text.frame.grid(row=1, columnspan=2, column=0)
