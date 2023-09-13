@@ -8,6 +8,7 @@ import frameworks.SettingsUI
 import importlib
 import sys
 
+import frameworks.autostart
 class func:
 	def __init__(self):
 		super().__init__()
